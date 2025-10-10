@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/select.h>
-#include <errno.h>
 
 #define PORT 8080
 #define MAX_CLIENTS 20
