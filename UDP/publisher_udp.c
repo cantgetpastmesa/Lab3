@@ -1,4 +1,16 @@
-// publisher_udp.c
+/*
+ * publisher_udp.c
+ *
+ * Publicador UDP simple que envía datagramas al broker. Como UDP es
+ * sin conexión, el publicador no llama a connect(); en su lugar usa
+ * sendto() especificando la dirección del broker.
+ *
+ * Uso:
+ * - socket(AF_INET, SOCK_DGRAM, 0) para crear un socket UDP IPv4.
+ * - inet_pton() para convertir la IP en forma binaria para sockaddr_in.
+ * - sendto() para transmitir datagramas al broker.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +27,7 @@ int main() {
     struct sockaddr_in serv_addr;
     char buffer[BUFFER_SIZE];
 
+    /* Crear socket UDP */
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd < 0) {
         perror("Error creando socket UDP");
@@ -31,11 +44,12 @@ int main() {
     while (1) {
         printf("> ");
         fgets(buffer, BUFFER_SIZE, stdin);
-        buffer[strcspn(buffer, "\n")] = 0;
+    buffer[strcspn(buffer, "\n")] = 0; /* eliminar salto de línea */
 
         if (strcmp(buffer, "exit") == 0)
             break;
 
+    /* sendto() envía un datagrama UDP al broker */
         sendto(sockfd, buffer, strlen(buffer), 0,
                (struct sockaddr *)&serv_addr, sizeof(serv_addr));
     }
